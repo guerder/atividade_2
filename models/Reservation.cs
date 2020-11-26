@@ -4,14 +4,15 @@ using atividade_2.models.enums;
 
 namespace atividade_2.models
 {
-  public class ReservationModel
+  public class Reservation : Entity
   {
-    public ClientModel Client { get; set; }
+    public Client Client { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime CheckIn { get; set; }
     public DateTime CheckOut { get; set; }
-    public RoomModel Room { get; set; }
+    public Room Room { get; set; }
     public RoomTypeEnum type { get; set; }
-    public List<ServiceModel> Services { get; set; }
+    public List<Service> Services { get; set; }
+    public Payment payment { get; set; }
   }
 }

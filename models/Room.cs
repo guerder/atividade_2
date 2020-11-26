@@ -2,7 +2,7 @@ using atividade_2.models.enums;
 
 namespace atividade_2.models
 {
-  public class RoomModel
+  public class Room : Entity
   {
     public int RoomNumber { get; set; }
     public bool isOcupedid { get; set; }
