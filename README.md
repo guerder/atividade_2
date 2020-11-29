@@ -100,6 +100,10 @@ public  class  Persistence
 
 O menu da aplicação foi montado de forma hierárquica, como árvore, onde cada elemento do menu pode conter um grupo de sub-itens ou uma ação para ser invocada.
 
+Esta é a hierarquia do menu seguida na aplicação:
+
+![diagrama de classe de navegação no menu](https://raw.githubusercontent.com/guerder/atividade_2/master/assets/hierarquia_menu.png)
+
 Abaixo está o diagrama de classe para a navegação no menu:
 
 ![diagrama de classe de navegação no menu](https://raw.githubusercontent.com/guerder/atividade_2/master/assets/composite.png)
