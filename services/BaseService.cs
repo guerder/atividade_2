@@ -51,7 +51,12 @@ namespace atividade_2.services
 
       return _hotel.FindClient(name, dateOfBirth);
     }
-    public Client RegisterClient()
+
+    public void RegisterClient()
+    {
+      registerClient();
+    }
+    private Client registerClient()
     {
       string name = "";
       string dateOfBirth = "";
@@ -208,7 +213,7 @@ namespace atividade_2.services
         Console.Clear();
         Console.WriteLine("");
         Console.WriteLine("Cliente não possui cadastro. Vamos iniciar o registro agora.");
-        client = RegisterClient();
+        client = registerClient();
       }
 
       Console.Write("\n > Digite a data de Check-In (DD-MM-YYYY): ");

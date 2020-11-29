@@ -10,67 +10,45 @@ namespace atividade_2
     private static BaseService baseService = new BaseService();
     static void Main(string[] args)
     {
-      var menus = new List<Menu>(){
-        new Menu(1, "Cadastro", 0),
-        new Menu(2, "Check-Out", 0),
-        new Menu(3, "Tabela de preços", 0),
-        new Menu(4, "Relatório diário", 0),
-        new Menu(5, "Cliente", 1),
-        new Menu(6, "Reserva", 1),
-        new Menu(7, "Quartos", 1),
-        new Menu(8, "Buscar Cliente", 5),
-        new Menu(9, "Cadastrar Cliente", 5),
-        new Menu(10, "Listar Clientes", 5),
-        new Menu(11, "Buscar Reserva", 6),
-        new Menu(12, "Cadastrar Reserva", 6),
-        new Menu(13, "Adicionar Serviço", 6),
-        new Menu(14, "Listar Quartos", 7),
-        new Menu(17, "", 0),
-      };
-      BuilderMenu builder = new BuilderMenu(menus);
+      Menu main = new Menu("Menu Principal", true);
+
+      Menu register = new Menu("Cadastro");
+      ItemSimple checkOut = new ItemSimple("Check-Out", baseService.CheckOut);
+      ItemSimple table = new ItemSimple("Tabela de preços", baseService.TablePrices);
+      ItemSimple report = new ItemSimple("Relatório diário", baseService.DailyReport);
+
+      main.Add(register);
+      main.Add(checkOut);
+      main.Add(table);
+      main.Add(report);
+
+      Menu client = new Menu("Cliente");
+      Menu reservation = new Menu("Reserva");
+      Menu room = new Menu("Quarto");
+      register.Add(client);
+      register.Add(reservation);
+      register.Add(room);
+
+      ItemSimple findClient = new ItemSimple("Buscar Cliente", baseService.FindClient);
+      ItemSimple registerClient = new ItemSimple("Cadastrar Cliente", baseService.RegisterClient);
+      ItemSimple listClients = new ItemSimple("Listar Clientes", baseService.ShowClients);
+      client.Add(findClient);
+      client.Add(registerClient);
+      client.Add(listClients);
+
+      ItemSimple findReservation = new ItemSimple("Buscar Reserva", baseService.FindReservation);
+      ItemSimple createReservation = new ItemSimple("Cadastrar Reserva", baseService.CreateReservation);
+      ItemSimple addService = new ItemSimple("Adicionar Serviço", baseService.AddService);
+      reservation.Add(findReservation);
+      reservation.Add(createReservation);
+      reservation.Add(addService);
+
+      ItemSimple listRooms = new ItemSimple("Listar Quartos", () => baseService.ShowListRooms());
+      room.Add(listRooms);
 
       do
       {
-        var idMenu = builder.Build();
-        switch (idMenu)
-        {
-          case 2:
-            baseService.CheckOut();
-            break;
-          case 3:
-            baseService.TablePrices();
-            break;
-          case 4:
-            baseService.DailyReport();
-            break;
-          case 8:
-            baseService.FindClient();
-            break;
-          case 9:
-            baseService.RegisterClient();
-            break;
-          case 10:
-            baseService.ShowClients();
-            break;
-          case 11:
-            baseService.FindReservation();
-            break;
-          case 12:
-            baseService.CreateReservation();
-            break;
-          case 13:
-            baseService.AddService();
-            break;
-          case 14:
-            baseService.ShowListRooms();
-            break;
-
-          default:
-            Console.WriteLine("\n Opção não implementada.");
-            Console.Write("\nPressione Enter...");
-            Console.ReadKey();
-            break;
-        }
+        main.Open();
       } while (true);
     }
   }
