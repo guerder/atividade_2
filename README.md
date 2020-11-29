@@ -27,7 +27,7 @@ O objetivo do sistema de hotel é automatizar o funcionamento de uma pousada. Pa
 
 ## Designer Patterns utilizados
 
-- Singleton
+- [Singleton](https://github.com/guerder/atividade_2#singleton)
 - Iterator
 - Composite
 
