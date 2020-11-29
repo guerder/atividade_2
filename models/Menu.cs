@@ -15,10 +15,6 @@ namespace atividade_2.models
     {
       includedMenuListings.Add(obj);
     }
-    public void Remove(MenuListing obj)
-    {
-      includedMenuListings.Remove(obj);
-    }
     public override void Open()
     {
       Titulo(Name);

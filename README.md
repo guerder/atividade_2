@@ -35,6 +35,8 @@ O objetivo do sistema de hotel é automatizar o funcionamento de uma pousada. Pa
 
 Utilizei para manter toda a lógica de salvar e carregar a instância de hotel. Além de não precisar replicar o código de serialização e deserialização eu pude fazer uso da instância globalmente.
 
+#### Implementação
+
 ```
 public  class  Persistence
 {
@@ -94,6 +96,172 @@ public  class  Persistence
 }
 ```
 
-### ITERATOR
-
 ### COMPOSITE
+
+O menu da aplicação foi montado de forma hierárquica, como árvore, onde cada elemento do menu pode conter um grupo de sub-itens ou uma ação para ser invocada.
+
+Abaixo está o diagrama de classe para a navegação no menu:
+
+![diagrama de classe de navegação no menu](https://raw.githubusercontent.com/guerder/atividade_2/master/assets/composite.png)
+
+#### Implementação resumida
+
+> MenuListing
+
+```
+public abstract class MenuListing
+  {
+    // Operações comuns de ambas as classes
+    public abstract void Open();
+    public string Name { get; set; }
+
+    public void Titulo(string titulo)
+    {
+      Console.Clear();
+      titulo = "".PadRight((100 - titulo.Length) / 2, ' ') + titulo.ToUpper();
+      Console.WriteLine("".PadRight(100, ' '));
+      Console.WriteLine(titulo);
+      Console.WriteLine("".PadRight(100, ' '));
+    }
+
+  }
+```
+
+> ItemSimple
+
+```
+public class ItemSimple : MenuListing
+  {
+    private delegate void ActionItem();
+    private ActionItem ActionExecute;
+
+    public ItemSimple(string name, Action function)
+    {
+      this.Name = name;
+      ActionExecute = new ActionItem(function);
+    }
+
+    // implementa a operação conforme especificidade da classe.
+    public override void Open()
+    {
+      Titulo(Name);
+      ActionExecute();
+    }
+  }
+```
+
+> Menu
+
+```
+public class Menu : MenuListing
+  {
+    private bool IsRoot;
+    public Menu(string name, bool isRoot = false)
+    {
+      this.Name = name; this.IsRoot = isRoot;
+    }
+    public List<MenuListing> includedMenuListings = new List<MenuListing>();
+
+    public void Add(MenuListing obj)
+    {
+      includedMenuListings.Add(obj);
+    }
+
+    // implementa a operação conforme especificidade da classe.
+    public override void Open()
+    {
+      Titulo(Name);
+      for (int i = 0; i < includedMenuListings.Count; i++)
+      {
+        var includedMenuListingsObject = includedMenuListings[i];
+        Console.WriteLine($"{i + 1}. {includedMenuListingsObject.Name}");
+      }
+
+      if (!IsRoot)
+      {
+        Console.WriteLine("\n0. Voltar para o início");
+      }
+
+      int option = 0;
+      Console.Write("\n > Digite o número correspondente: ");
+      try
+      {
+        option = int.Parse(Console.ReadLine());
+      }
+      catch
+      {
+        option = -1;
+      }
+
+      if (option == 0 && !IsRoot)
+      {
+        return;
+      }
+
+      if ((option - 1) < 0 || (option) > includedMenuListings.Count)
+      {
+        Console.WriteLine("\n Opção inválida! Pressione Enter");
+        Console.ReadKey();
+        return;
+      }
+      var item = includedMenuListings[option - 1];
+
+      item.Open();
+    }
+  }
+```
+
+> Client
+
+```
+class Program
+  {
+    private static BaseService baseService = new BaseService();
+    static void Main(string[] args)
+    {
+      // Aqui está sendo montado a hierarquia do menu.
+      Menu main = new Menu("Menu Principal", true);
+
+      Menu register = new Menu("Cadastro");
+      ItemSimple checkOut = new ItemSimple("Check-Out", baseService.CheckOut);
+      ItemSimple table = new ItemSimple("Tabela de preços", baseService.TablePrices);
+      ItemSimple report = new ItemSimple("Relatório diário", baseService.DailyReport);
+
+      main.Add(register);
+      main.Add(checkOut);
+      main.Add(table);
+      main.Add(report);
+
+      Menu client = new Menu("Cliente");
+      Menu reservation = new Menu("Reserva");
+      Menu room = new Menu("Quarto");
+      register.Add(client);
+      register.Add(reservation);
+      register.Add(room);
+
+      ItemSimple findClient = new ItemSimple("Buscar Cliente", baseService.FindClient);
+      ItemSimple registerClient = new ItemSimple("Cadastrar Cliente", baseService.RegisterClient);
+      ItemSimple listClients = new ItemSimple("Listar Clientes", baseService.ShowClients);
+      client.Add(findClient);
+      client.Add(registerClient);
+      client.Add(listClients);
+
+      ItemSimple findReservation = new ItemSimple("Buscar Reserva", baseService.FindReservation);
+      ItemSimple createReservation = new ItemSimple("Cadastrar Reserva", baseService.CreateReservation);
+      ItemSimple addService = new ItemSimple("Adicionar Serviço", baseService.AddService);
+      reservation.Add(findReservation);
+      reservation.Add(createReservation);
+      reservation.Add(addService);
+
+      ItemSimple listRooms = new ItemSimple("Listar Quartos", () => baseService.ShowListRooms());
+      room.Add(listRooms);
+
+      do
+      {
+        main.Open();
+      } while (true);
+    }
+  }
+```
+
+### ITERATOR
