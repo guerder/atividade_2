@@ -38,59 +38,59 @@ Utilizei para manter toda a lógica de salvar e carregar a instância de hotel. 
 ```
 public  class  Persistence
 {
-	// O campo para armazenar a instância singleton
-	private  static  Persistence _instance;
-	private  Hotel _hotel;
+  // O campo para armazenar a instância singleton
+  private  static  Persistence _instance;
+  private  Hotel _hotel;
 
-	// Construtor protegido, chamado apenas internamente.
-	protected  Persistence()
-	{
-		_hotel = new  Hotel();
-		try
-		{
-			FileStream  fs = new  FileStream("data.bin", FileMode.Open);
-			BinaryFormatter  bf = new  BinaryFormatter();
-			_hotel = (Hotel)bf.Deserialize(fs);
-			fs.Close();
-		}
-		catch { }
-	}
+  // Construtor protegido, chamado apenas internamente.
+  protected  Persistence()
+  {
+    _hotel = new  Hotel();
+    try
+    {
+      FileStream  fs = new  FileStream("data.bin", FileMode.Open);
+      BinaryFormatter  bf = new  BinaryFormatter();
+      _hotel = (Hotel)bf.Deserialize(fs);
+      fs.Close();
+    }
+    catch { }
+  }
 
-	// Lógica para manter apenas uma instância da classe
-	public  static  Persistence  GetInstance
-	{
-		get
-		{
-			if (_instance == null)
-			{
-				_instance = new  Persistence();
-			}
-			return  _instance;
-		}
-	}
+  // Lógica para manter apenas uma instância da classe
+  public  static  Persistence  GetInstance
+  {
+    get
+    {
+      if (_instance == null)
+      {
+        _instance = new  Persistence();
+      }
+      return  _instance;
+      }
+    }
 
-	// Método para retornar a instância de Hotel pertencente a classe Persistence.
-	public  Hotel  GetBaseHotel()
-	{
-		return  _hotel;
-	}
+  // Método para retornar a instância de Hotel pertencente a classe Persistence.
+  public  Hotel  GetBaseHotel()
+  {
+    return  _hotel;
+  }
 
-	// Método com a lógica de serializar a instância de Hotel.
-	public  void  Save()
-	{
-		try
-		{
-			FileStream  fs = new  FileStream("data.bin", FileMode.Create);
-			BinaryFormatter  bf = new  BinaryFormatter();
-			bf.Serialize(fs, _hotel);
-			fs.Close();
-		}
-		catch (Exception  e)
-		{
-			Console.WriteLine("erro na gravação dos dados: " + e);
-			Console.ReadKey();
-		}
-	}
+  // Método com a lógica de serializar a instância de Hotel.
+  public  void  Save()
+  {
+    try
+    {
+      FileStream  fs = new  FileStream("data.bin", FileMode.Create);
+      BinaryFormatter  bf = new  BinaryFormatter();
+      bf.Serialize(fs, _hotel);
+      fs.Close();
+    }
+    catch (Exception  e)
+    {
+      Console.WriteLine("erro na gravação dos dados: " + e);
+      Console.ReadKey();
+    }
+  }
 }
 ```
 
