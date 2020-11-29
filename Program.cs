@@ -18,12 +18,14 @@ namespace atividade_2
         new Menu(4, "Relatório diário", 0),
         new Menu(5, "Cliente", 1),
         new Menu(6, "Reserva", 1),
-        new Menu(7, "Buscar Cliente", 5),
-        new Menu(8, "Cadastrar Cliente", 5),
-        new Menu(9, "Listar Clientes", 5),
-        new Menu(10, "Buscar Reserva", 6),
-        new Menu(11, "Cadastrar Reserva", 6),
-        new Menu(12, "Listar Reservas", 6),
+        new Menu(7, "Quartos", 1),
+        new Menu(8, "Buscar Cliente", 5),
+        new Menu(9, "Cadastrar Cliente", 5),
+        new Menu(10, "Listar Clientes", 5),
+        new Menu(11, "Buscar Reserva", 6),
+        new Menu(12, "Cadastrar Reserva", 6),
+        new Menu(13, "Listar Reservas", 6),
+        new Menu(14, "Listar Quartos", 7),
         new Menu(17, "", 0),
       };
       BuilderMenu builder = new BuilderMenu(menus);
@@ -33,14 +35,23 @@ namespace atividade_2
         var idMenu = builder.Build();
         switch (idMenu)
         {
-          case 7:
+          case 8:
             baseService.FindClient();
             break;
-          case 8:
+          case 9:
             baseService.RegisterClient();
             break;
-          case 9:
+          case 10:
             baseService.ShowClients();
+            break;
+          case 11:
+            baseService.FindReservation();
+            break;
+          case 12:
+            baseService.CreateReservation();
+            break;
+          case 14:
+            baseService.ShowListRooms();
             break;
 
           default:

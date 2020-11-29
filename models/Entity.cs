@@ -7,9 +7,9 @@ namespace atividade_2.models
   {
     protected Entity()
     {
-      Id = Guid.NewGuid();
+      Id = String.Concat(Guid.NewGuid().ToString().Split("-"));
     }
 
-    public Guid Id { get; private set; }
+    public string Id { get; private set; }
   }
 }

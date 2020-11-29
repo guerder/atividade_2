@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using atividade_2.utils;
 
 namespace atividade_2.models
 {
@@ -9,6 +10,7 @@ namespace atividade_2.models
     public Client(string name, string dateOfBirth, string rg, string phone, string address, string neighborhood, string city, string state)
     {
       Name = name.ToUpper();
+      DateOfBirth = Formatter.StringToDate(dateOfBirth);
       Rg = rg;
       Phone = phone;
       Address = address;
@@ -16,10 +18,6 @@ namespace atividade_2.models
       City = city;
       State = state;
       Reservations = new List<Reservation>();
-
-      string[] dateInParts = dateOfBirth.Split("-");
-      var formattedDateOfBirth = new DateTime(int.Parse(dateInParts[2]), int.Parse(dateInParts[1]), int.Parse(dateInParts[0]));
-      DateOfBirth = formattedDateOfBirth;
     }
 
     public string Name { get; set; }
