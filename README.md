@@ -102,7 +102,7 @@ O menu da aplicação foi montado de forma hierárquica, como árvore, onde cada
 
 Esta é a hierarquia do menu seguida na aplicação:
 
-![diagrama de classe de navegação no menu](https://raw.githubusercontent.com/guerder/atividade_2/master/assets/hierarquia_menu.png)
+![hierarquia do menu](https://raw.githubusercontent.com/guerder/atividade_2/master/assets/hierarquia_menu.png)
 
 Abaixo está o diagrama de classe para a navegação no menu:
 
