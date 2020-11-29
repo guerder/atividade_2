@@ -21,11 +21,11 @@ O objetivo do sistema de hotel é automatizar o funcionamento de uma pousada. Pa
 ## Leia atentamente a descrição e elabore:
 
 1. [x] Monte o Diagrama de Classes
-2. [ ] Implemente as classes em C#, com os devidos elementos:
-3. [ ] Utilize pelo menos três (3) Design Patterns visto em sala (à sua escolha).
-4. [ ] Escreva um documento explicando a estrutura de seu programa, e onde e como foram aplicados os Patterns.
+2. [x] Implemente as classes em C#, com os devidos elementos:
+3. [x] Utilize pelo menos três (3) Design Patterns visto em sala (à sua escolha).
+4. [x] Escreva um documento explicando a estrutura de seu programa, e onde e como foram aplicados os Patterns.
 
-## Designer Patterns utilizados
+## Design Patterns utilizados
 
 - [Singleton](https://github.com/guerder/atividade_2#singleton)
 - [Composite](https://github.com/guerder/atividade_2#composite)
@@ -268,7 +268,7 @@ class Program
 
 Em conjunto ao Design Pattern Composite utilizei de forma tímida o Iterator para implementar a exibição dos itens da classe Menu, de forma que a iteração ficasse oculta ao Client. O Client invoca o método Open() pertencente as classes ItemSimple e Menu, mas apenas em Menu é realizado a iteração.
 
-> implementação
+#### implementação
 
 > Menu
 
