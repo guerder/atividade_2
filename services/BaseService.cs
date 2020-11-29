@@ -225,6 +225,7 @@ namespace atividade_2.services
       );
 
       ShowDetailsReservation(reservation);
+      ShowDetailsRoom(reservation.Room);
 
       Console.Write("\n > Confirma a reserva? (S/N): ");
       string confirmarPedido = "";
@@ -276,6 +277,7 @@ namespace atividade_2.services
       }
 
       ShowDetailsReservation(reservation);
+      ShowDetailsRoom(reservation.Room);
 
       Console.Write("\nPressione Enter...");
       Console.ReadKey();
@@ -294,7 +296,7 @@ namespace atividade_2.services
         return;
       }
 
-      ShowDetailsService(reservation);
+      showDetailsService(reservation);
 
       string dia = "";
       string typeService = "";
@@ -346,7 +348,7 @@ namespace atividade_2.services
       Console.Clear();
       Console.WriteLine("");
       Console.Write($"Adicionado {typeService} na data {Formatter.Date(service.Date)} com sucesso");
-      ShowDetailsService(reservation);
+      showDetailsService(reservation);
       Console.Write("\nPressione Enter...");
       Console.ReadKey();
     }
@@ -364,7 +366,7 @@ namespace atividade_2.services
         return;
       }
 
-      ShowDetailsService(reservation);
+      showDetailsService(reservation);
       Console.Write("\nPressione Enter...");
       Console.ReadKey();
     }
@@ -407,6 +409,58 @@ namespace atividade_2.services
       Console.ReadKey();
     }
 
+    public void CheckOut()
+    {
+      var reservation = findReservation();
+
+      if (reservation == null)
+      {
+        Console.WriteLine("");
+        Console.WriteLine("Reserva não localizada");
+        Console.Write("\nPressione Enter...");
+        Console.ReadKey();
+        return;
+      }
+
+      ShowDetailsReservation(reservation, true);
+
+      if (reservation.Status == Status.Close)
+      {
+        Console.WriteLine("");
+        Console.WriteLine($"Reserva {reservation.Id} já está finalizada!");
+        Console.Write("\nPressione Enter...");
+        Console.ReadKey();
+        return;
+      }
+
+      Console.Write("\n > Confirma o procedimento de Check-Out? (S/N): ");
+      string confirmarPedido = "";
+      try
+      {
+        confirmarPedido = Console.ReadLine().ToUpper();
+      }
+      catch { }
+
+      if (confirmarPedido == "S")
+      {
+        reservation.Room.isOcupedid = false;
+        reservation.Status = Status.Close;
+        Console.WriteLine("");
+        Console.WriteLine($"Reserva {reservation.Id} finalizada com sucesso!");
+        Console.Write("\nPressione Enter...");
+        Console.ReadKey();
+        return;
+      }
+      else
+      {
+        Console.WriteLine("");
+        Console.WriteLine($"Transação não confirmada.");
+        Console.Write("\nPressione Enter...");
+        Console.ReadKey();
+        return;
+      }
+    }
+
     private Reservation findReservation()
     {
       if (_hotel.Reservations.Count == 0)
@@ -425,8 +479,16 @@ namespace atividade_2.services
       return _hotel.FindReservation(cod);
     }
 
-    private void ShowDetailsReservation(Reservation reservation)
+    private void ShowDetailsReservation(Reservation reservation, bool isCheckout = false)
     {
+      double total = reservation.TotalDaily() + reservation.TotalServices();
+      double fee = 0;
+      if (isCheckout)
+      {
+        fee = total * Price.CONVENIENCE_FEE;
+        total += fee - reservation.Payment.TotalPaid;
+      }
+
       Console.WriteLine("");
       Console.WriteLine("".PadRight(100, '_'));
       if (reservation.Status != Status.Pending)
@@ -439,6 +501,11 @@ namespace atividade_2.services
       Console.WriteLine($"Data de Check-In: {Formatter.Date(reservation.CheckIn)}");
       Console.WriteLine($"Data de Check-Out: {Formatter.Date(reservation.CheckOut)}");
 
+      if (isCheckout)
+      {
+        tableServices(reservation);
+      }
+
       Console.WriteLine(
         $"Diária: {(Price.getValue(reservation.Type)).ToString("C")} X {reservation.TotalDays()} = {reservation.TotalDaily().ToString("C")}".PadLeft(100, ' ')
       );
@@ -449,25 +516,29 @@ namespace atividade_2.services
           $"Serviços (Alimentação + Telefone): {reservation.TotalServices().ToString("C")}".PadLeft(100, ' ')
         );
         var wasDepositedEarly = reservation.Payment.TotalPaid != 0 ? "Sim" : "Não";
-        Console.WriteLine(
-          $"Feito depósito antecipado da reserva? {wasDepositedEarly}".PadLeft(100, ' ')
+        Console.Write(
+          $"Feito depósito antecipado da reserva? {wasDepositedEarly}".PadRight(50, ' ')
         );
         if (reservation.Payment.TotalPaid != 0)
         {
           Console.WriteLine(
-          $"Valor depositado: {reservation.Payment.TotalPaid.ToString("C")}".PadLeft(100, ' ')
-        );
+            $"Valor depositado: {reservation.Payment.TotalPaid.ToString("C")}".PadLeft(50, ' ')
+          );
         }
+      }
+      if (isCheckout)
+      {
+        Console.WriteLine(
+          $"Taxa de atendimento: {fee.ToString("C")}".PadLeft(100, ' ')
+        );
       }
       Console.WriteLine("");
       Console.WriteLine(
-        $"TOTAL: {(reservation.TotalDaily() + reservation.TotalServices() - reservation.Payment.TotalPaid).ToString("C")}".PadLeft(100, ' ')
+        $"TOTAL: {total.ToString("C")}".PadLeft(100, ' ')
       );
-
-      ShowDetailsRoom(reservation.Room);
     }
 
-    private void ShowDetailsService(Reservation reservation)
+    private void showDetailsService(Reservation reservation)
     {
       Console.WriteLine("");
       Console.WriteLine("".PadRight(100, '_'));
@@ -476,6 +547,14 @@ namespace atividade_2.services
         $"Estado da reserva: {reservation.Status}".PadLeft(50, ' ')
       );
 
+      tableServices(reservation);
+      Console.WriteLine("");
+      Console.WriteLine($"TOTAL: {(reservation.TotalDaily() + reservation.TotalServices()).ToString("C")}".PadLeft(100, ' '));
+      Console.WriteLine("".PadRight(100, '_'));
+    }
+
+    private void tableServices(Reservation reservation)
+    {
       Console.WriteLine("".PadRight(100, '_'));
       Console.WriteLine(
         "Dia" +
@@ -504,8 +583,6 @@ namespace atividade_2.services
           $"|{sum.ToString("C")}"
         );
       }
-      Console.WriteLine("");
-      Console.WriteLine($"TOTAL: {total.ToString("C")}".PadLeft(100, ' '));
       Console.WriteLine("".PadRight(100, '_'));
     }
   }

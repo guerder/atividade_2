@@ -9,6 +9,7 @@ namespace atividade_2.models
     public static double TRIPLE_PRICE = 150.0;
     public static double TELEPHONE = 10.0;
     public static double FOOD = 40.0;
+    public static double CONVENIENCE_FEE = 0.05;
 
     public static double getValue(RoomTypeEnum type)
     {

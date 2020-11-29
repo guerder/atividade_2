@@ -34,6 +34,9 @@ namespace atividade_2
         var idMenu = builder.Build();
         switch (idMenu)
         {
+          case 2:
+            baseService.CheckOut();
+            break;
           case 3:
             baseService.TablePrices();
             break;
