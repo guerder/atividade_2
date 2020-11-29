@@ -240,14 +240,26 @@ namespace atividade_2.services
         reservation.Status = Status.Open;
         client.Reservations.Add(reservation);
         _hotel.Reservations.Add(reservation);
-        Persistence.GetInstance.Save();
-      }
 
-      Console.WriteLine("");
-      Console.WriteLine($"Reserva {reservation.Id} realizada com sucesso!");
-      Console.Write("\nPressione Enter...");
-      Console.ReadKey();
-      return;
+        // Simula se o valor da reserva foi creditado e o valor creditado.
+        reservation.SimulatorPayment();
+
+        Persistence.GetInstance.Save();
+
+        Console.WriteLine("");
+        Console.WriteLine($"Reserva {reservation.Id} realizada com sucesso!");
+        Console.Write("\nPressione Enter...");
+        Console.ReadKey();
+        return;
+      }
+      else
+      {
+        Console.WriteLine("");
+        Console.WriteLine($"Transação não confirmada.");
+        Console.Write("\nPressione Enter...");
+        Console.ReadKey();
+        return;
+      }
     }
 
     public void FindReservation()
@@ -436,10 +448,20 @@ namespace atividade_2.services
         Console.WriteLine(
           $"Serviços (Alimentação + Telefone): {reservation.TotalServices().ToString("C")}".PadLeft(100, ' ')
         );
+        var wasDepositedEarly = reservation.Payment.TotalPaid != 0 ? "Sim" : "Não";
+        Console.WriteLine(
+          $"Feito depósito antecipado da reserva? {wasDepositedEarly}".PadLeft(100, ' ')
+        );
+        if (reservation.Payment.TotalPaid != 0)
+        {
+          Console.WriteLine(
+          $"Valor depositado: {reservation.Payment.TotalPaid.ToString("C")}".PadLeft(100, ' ')
+        );
+        }
       }
       Console.WriteLine("");
       Console.WriteLine(
-        $"TOTAL: {(reservation.TotalDaily() + reservation.TotalServices()).ToString("C")}".PadLeft(100, ' ')
+        $"TOTAL: {(reservation.TotalDaily() + reservation.TotalServices() - reservation.Payment.TotalPaid).ToString("C")}".PadLeft(100, ' ')
       );
 
       ShowDetailsRoom(reservation.Room);
