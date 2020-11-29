@@ -12,7 +12,6 @@ namespace atividade_2
     {
       var menus = new List<Menu>(){
         new Menu(1, "Cadastro", 0),
-        new Menu(2, "Check-In", 0),
         new Menu(2, "Check-Out", 0),
         new Menu(3, "Tabela de preços", 0),
         new Menu(4, "Relatório diário", 0),
@@ -24,7 +23,7 @@ namespace atividade_2
         new Menu(10, "Listar Clientes", 5),
         new Menu(11, "Buscar Reserva", 6),
         new Menu(12, "Cadastrar Reserva", 6),
-        new Menu(13, "Listar Reservas", 6),
+        new Menu(13, "Adicionar Serviço", 6),
         new Menu(14, "Listar Quartos", 7),
         new Menu(17, "", 0),
       };
@@ -49,6 +48,9 @@ namespace atividade_2
             break;
           case 12:
             baseService.CreateReservation();
+            break;
+          case 13:
+            baseService.AddService();
             break;
           case 14:
             baseService.ShowListRooms();

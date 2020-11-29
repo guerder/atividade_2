@@ -26,6 +26,7 @@ namespace atividade_2.services
 
       ShowDetailsClient(client);
 
+      Console.Write("\nPressione Enter...");
       Console.ReadKey();
     }
 
@@ -114,6 +115,7 @@ namespace atividade_2.services
       Console.WriteLine($"Bairro: {client.Neighborhood}");
       Console.WriteLine($"Cidade: {client.City}");
       Console.WriteLine($"Estado: {client.State}");
+      Console.WriteLine("".PadRight(100, '_'));
     }
 
     public void ShowClients()
@@ -267,6 +269,76 @@ namespace atividade_2.services
       Console.ReadKey();
     }
 
+    public void AddService()
+    {
+      var reservation = findReservation();
+
+      if (reservation == null)
+      {
+        Console.WriteLine("");
+        Console.WriteLine("Reserva não localizada");
+        Console.Write("\nPressione Enter...");
+        Console.ReadKey();
+        return;
+      }
+
+      ShowDetailsService(reservation);
+
+      string dia = "";
+      string typeService = "";
+
+      Console.Write("\n > Digite o número correspondente ao DIA: ");
+      try { dia = Console.ReadLine(); } catch { }
+
+      Service service = null;
+      try
+      {
+        service = reservation.Services[int.Parse(dia) - 1];
+      }
+      catch { }
+
+      if (service == null)
+      {
+        Console.WriteLine("");
+        Console.WriteLine("DIA digitado inválido");
+        Console.Write("\nPressione Enter...");
+        Console.ReadKey();
+        return;
+      }
+
+      Console.Write("\n > Digite 'A' para Alimentação, e 'T' para Telefone: ");
+      try { typeService = Console.ReadLine(); } catch { }
+
+      if (typeService.ToUpper().Equals("A") || typeService.ToUpper().Equals("T"))
+      {
+        if (typeService.ToUpper().Equals("A"))
+        {
+          service.Food = true;
+          typeService = "Alimentação";
+        }
+        else
+        {
+          service.Phone = true;
+          typeService = "Telefone";
+        }
+      }
+      else
+      {
+        Console.WriteLine("");
+        Console.WriteLine("Tipo de serviço digitado inválido");
+        Console.Write("\nPressione Enter...");
+        Console.ReadKey();
+      }
+
+      Persistence.GetInstance.Save();
+      Console.Clear();
+      Console.WriteLine("");
+      Console.Write($"Adicionado {typeService} na data {Formatter.Date(service.Date)} com sucesso");
+      ShowDetailsService(reservation);
+      Console.Write("\nPressione Enter...");
+      Console.ReadKey();
+    }
+
     private Reservation findReservation()
     {
       if (_hotel.Reservations.Count == 0)
@@ -298,14 +370,65 @@ namespace atividade_2.services
       }
       Console.WriteLine($"Data de Check-In: {Formatter.Date(reservation.CheckIn)}");
       Console.WriteLine($"Data de Check-Out: {Formatter.Date(reservation.CheckOut)}");
-      Console.WriteLine($"Quantidade de dias: {reservation.TotalDays()}");
 
       Console.WriteLine(
-        $"Valor da diária: {(Price.getValue(reservation.Type)).ToString("C")}".PadRight(50, ' ') +
-        $"Valor total: {(Price.getValue(reservation.Type) * reservation.TotalDays()).ToString("C")}".PadLeft(50, ' ')
+        $"Diária: {(Price.getValue(reservation.Type)).ToString("C")} X {reservation.TotalDays()} = {reservation.TotalDaily().ToString("C")}".PadLeft(100, ' ')
+      );
+
+      if (reservation.Status != Status.Pending)
+      {
+        Console.WriteLine(
+          $"Serviços (Alimentação + Telefone): {reservation.TotalServices().ToString("C")}".PadLeft(100, ' ')
+        );
+      }
+      Console.WriteLine("");
+      Console.WriteLine(
+        $"TOTAL: {(reservation.TotalDaily() + reservation.TotalServices()).ToString("C")}".PadLeft(100, ' ')
       );
 
       ShowDetailsRoom(reservation.Room);
+    }
+
+    private void ShowDetailsService(Reservation reservation)
+    {
+      Console.WriteLine("");
+      Console.WriteLine("".PadRight(100, '_'));
+      Console.WriteLine(
+        $"Nº da reserva: {reservation.Id}".PadRight(50, ' ') +
+        $"Estado da reserva: {reservation.Status}".PadLeft(50, ' ')
+      );
+
+      Console.WriteLine("".PadRight(100, '_'));
+      Console.WriteLine(
+        "Dia" +
+        "|Data ".PadRight(20, ' ') +
+        "|Hospedagem ".PadRight(20, ' ') +
+        "|Alimentação ".PadRight(20, ' ') +
+        "|Telefone ".PadRight(20, ' ') +
+        "|Sub-total"
+      );
+
+      double total = 0;
+      for (int index = 0; index < reservation.Services.Count; index++)
+      {
+        var service = reservation.Services[index];
+        var dailyPrice = Price.getValue(reservation.Type);
+        var foodPrice = service.Food ? Price.FOOD : 0;
+        var phonePrice = service.Phone ? Price.TELEPHONE : 0;
+        var sum = dailyPrice + foodPrice + phonePrice;
+        total += sum;
+        Console.WriteLine(
+          $"{(index + 1).ToString().PadLeft(3, ' ')}" +
+          $"|{Formatter.Date(service.Date)}".PadRight(20, ' ') +
+          $"|{dailyPrice.ToString("C")}".PadRight(20, ' ') +
+          $"|{foodPrice.ToString("C")}".PadRight(20, ' ') +
+          $"|{phonePrice.ToString("C")}".PadRight(20, ' ') +
+          $"|{sum.ToString("C")}"
+        );
+      }
+      Console.WriteLine("");
+      Console.WriteLine($"TOTAL: {total.ToString("C")}".PadLeft(100, ' '));
+      Console.WriteLine("".PadRight(100, '_'));
     }
   }
 }

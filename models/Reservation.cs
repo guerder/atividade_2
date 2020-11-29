@@ -15,7 +15,7 @@ namespace atividade_2.models
       CheckOut = checkOut;
       Room = room;
       Type = room.Type;
-      Services = new List<Service>();
+      Services = GenerateServices();
       Status = Status.Pending;
     }
 
@@ -41,10 +41,44 @@ namespace atividade_2.models
       return diff.Days;
     }
 
+    public double TotalDaily()
+    {
+      double total = 0;
+      foreach (var service in Services)
+      {
+        var dailyPrice = Price.getValue(Type);
+        total += dailyPrice;
+      }
+      return total;
+    }
+
+    public double TotalServices()
+    {
+      double total = 0;
+      foreach (var service in Services)
+      {
+        var foodPrice = service.Food ? Price.FOOD : 0;
+        var phonePrice = service.Phone ? Price.TELEPHONE : 0;
+        total += foodPrice + phonePrice;
+      }
+      return total;
+    }
+
     public void DoCheckOut()
     {
       Status = Status.Close;
       Room.isOcupedid = false;
+    }
+
+    private List<Service> GenerateServices()
+    {
+      List<Service> list = new List<Service>();
+      for (int i = 0; i < TotalDays(); i++)
+      {
+        var currentDate = CheckIn.AddDays(i);
+        list.Add(new Service(currentDate));
+      }
+      return list;
     }
   }
 }
