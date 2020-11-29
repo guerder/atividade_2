@@ -34,6 +34,9 @@ namespace atividade_2
         var idMenu = builder.Build();
         switch (idMenu)
         {
+          case 4:
+            baseService.DailyReport();
+            break;
           case 8:
             baseService.FindClient();
             break;

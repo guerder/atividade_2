@@ -339,6 +339,24 @@ namespace atividade_2.services
       Console.ReadKey();
     }
 
+    public void DailyReport()
+    {
+      var reservation = findReservation();
+
+      if (reservation == null)
+      {
+        Console.WriteLine("");
+        Console.WriteLine("Reserva não localizada");
+        Console.Write("\nPressione Enter...");
+        Console.ReadKey();
+        return;
+      }
+
+      ShowDetailsService(reservation);
+      Console.Write("\nPressione Enter...");
+      Console.ReadKey();
+    }
+
     private Reservation findReservation()
     {
       if (_hotel.Reservations.Count == 0)
