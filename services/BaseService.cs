@@ -357,6 +357,44 @@ namespace atividade_2.services
       Console.ReadKey();
     }
 
+    public void TablePrices()
+    {
+      Console.WriteLine(" > HOSPEDAGEM");
+      Console.WriteLine("");
+      Console.WriteLine(
+        $"   Simples (Single)".PadRight(50, '.') +
+        $"{Price.SINGLE_PRICE.ToString("C")}".PadLeft(50, '.')
+      );
+      Console.WriteLine(
+        $"   Dupla (Double)".PadRight(50, '.') +
+        $"{Price.DOUBLE_PRICE.ToString("C")}".PadLeft(50, '.')
+      );
+      Console.WriteLine(
+        $"   Tripla (Triple)".PadRight(50, '.') +
+        $"{Price.TRIPLE_PRICE.ToString("C")}".PadLeft(50, '.')
+      );
+      Console.WriteLine("");
+
+      Console.WriteLine(" > SERVIÇOS");
+      Console.WriteLine("");
+      Console.WriteLine(
+        $"   Alimentação".PadRight(50, '.') +
+        $"{Price.FOOD.ToString("C")}".PadLeft(50, '.')
+      );
+      Console.WriteLine(
+        $"   Uso do Telefone".PadRight(50, '.') +
+        $"{Price.TELEPHONE.ToString("C")}".PadLeft(50, '.')
+      );
+
+      Console.WriteLine("");
+      Console.WriteLine("");
+      Console.WriteLine("   *OBSERVAÇÃO: OS VALORES ACIMA REPRESENTAM O CUSTO POR DIA.");
+      Console.WriteLine("");
+
+      Console.Write("\nPressione Enter...");
+      Console.ReadKey();
+    }
+
     private Reservation findReservation()
     {
       if (_hotel.Reservations.Count == 0)
